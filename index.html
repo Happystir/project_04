@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <form action="">
+            <input type="text" name="username" value="11" >
+            <input type="text" name="password" value="22" >
+            <button id="btn1">获取</button>
+            <button id="btn2">提交</button>
+            <div id="div">hahaha</div>
+        </form>
+    </div>
+    <script src="./jquery-3.6.1.min.js"></script>
+    <script>
+        let btn1 = document.querySelector('button');
+        let div= document.querySelector('#div');
+        let fm= document.querySelector('form')
+        // let fmData= new FormData(fm)
+        // console.log(fmData)
+        btn1.addEventListener('click',function(){
+            ajax1()
+        })
+
+        btn2.addEventListener('click',function(e){
+
+            e.preventDefault()
+            // let fmData= new FormData(fm)
+            let fmData=$("form").serialize()
+            ajax2(fmData)
+        })
+
+
+        function ajax1(){
+            var xmlhttp
+            if(window.XMLHttpRequest){
+                xmlhttp= new XMLHttpRequest()
+            }
+            else{
+                xmlhttp = new ActiveXObject("Microsoft. XMLHTTP")
+            }
+
+            xmlhttp.onreadystatechange= function(){
+                if(xmlhttp.readyState==4 && xmlhttp.status==200){
+                    div.innerHTML=xmlhttp.responseText
+                }
+            }
+            xmlhttp.open('get','http://127.0.0.1:8081/api/user',true)
+            xmlhttp.send()
+        }
+
+
+        function ajax2(data){
+            var xmlhttp
+            if(window.XMLHttpRequest){
+                xmlhttp= new XMLHttpRequest()
+            }
+            else{
+                xmlhttp = new ActiveXObject("Microsoft. XMLHTTP")
+            }
+
+            xmlhttp.onreadystatechange= function(){
+                if(xmlhttp.readyState==4 && xmlhttp.status==200){
+                    div.innerHTML=xmlhttp.responseText
+                }
+            }
+            
+            xmlhttp.open('post','http://127.0.0.1:8081/api/add',true)
+            // xmlhttp.setRequestHeader("Content-Type", "application/text/plain;charset=utf-8")
+            xmlhttp.setRequestHeader("Content-Type",  "application/x-www-form-urlencoded")
+          
+            xmlhttp.send(data)
+        }
+    </script>
+</body>
+</html>
