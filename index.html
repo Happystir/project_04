@@ -4,77 +4,228 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <style>
+        #div3 {
+                width: 800px;
+                height: 200px;
+                background-color: aqua;
+                text-align: center;
+                float: right;
+        }
+    </style>
 </head>
 <body>
     <div>
-        <form action="">
-            <input type="text" name="username" value="11" >
-            <input type="text" name="password" value="22" >
-            <button id="btn1">获取</button>
+        <form id="fm" action="">
+            <!-- <input type="text" name="username" value="11" >
+            <input type="text" name="password" value="22" > -->
+            <input type="text" name="username"  >
+            <input type="text" name="password"  >
+            <button id="btn1">查询</button>
             <button id="btn2">提交</button>
             <div id="div">hahaha</div>
         </form>
     </div>
+
+    <div id="div2">
+        <!-- <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>密码</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>张三</td>
+                <td>abc123</td>
+                <td>0</td>
+                <td>删除</td>
+            </tr>
+        </table> -->
+    </div>
+
+    <div id="div3">
+        <form id="fm1" action="">
+            <input type="text" name="username"  >
+            <input type="text" name="password"  >
+            <button id="btn3">取消</button>
+            <button id="btn4">确定</button>
+        </form>
+    </div>
+
+
     <script src="./jquery-3.6.1.min.js"></script>
+    <script src="./bootstrap.min.js"></script>
+    <script src="./node_modules/art-template/lib/template-web.js"></script>
+    <script src="./ajax.js"></script>
+
     <script>
-        let btn1 = document.querySelector('button');
-        let div= document.querySelector('#div');
+        // let btn1 = document.querySelector('button')
+        let div= document.querySelector('#div')
+        
         let fm= document.querySelector('form')
-        // let fmData= new FormData(fm)
-        // console.log(fmData)
-        btn1.addEventListener('click',function(){
-            ajax1()
+        let content={}
+
+
+        ajax({
+                method:'get',
+                url:'http://127.0.0.1:8081/api/index',
+                data:{},
+                success:function(res){
+                    // console.log(res)
+                    // content.data=res
+                    content={data:res}
+                    let htmlStr= template('tel-p',content)
+                    document.querySelector('#div2').innerHTML= htmlStr
+                }
+            })
+
+
+
+        btn1.addEventListener('click',function(e){
+            e.preventDefault()
+
+            let fmData= new FormData(fm)
+
+            let  object = {};
+            fmData.forEach((value, key) => {
+            if(!Reflect.has(object, key)){
+                object[key] = value;
+                return;
+            }
+            if(!Array.isArray(object[key])){
+                object[key] = [object[key]];    
+            }
+            object[key].push(value);
+        })
+            // console.log('object-------------')
+            // console.log(object)
+
+            ajax({
+                method:'get',
+                url:'http://127.0.0.1:8081/api/user',
+                data:object,
+                success:function(res){
+                    console.log(res)
+                    content={data:res}
+                    if(res.length===0){
+                        document.querySelector('#div2').innerHTML= '查询不到数据'
+                    }
+                    else{
+                        console.log('content:'+content)
+                    let htmlStr= template('tel-p',content)
+
+                    // console.log(htmlStr)
+                    document.querySelector('#div2').innerHTML= htmlStr
+                    }
+
+                    
+                }
+            })
         })
 
         btn2.addEventListener('click',function(e){
-
             e.preventDefault()
-            // let fmData= new FormData(fm)
-            let fmData=$("form").serialize()
-            ajax2(fmData)
+            let fmData= new FormData(fm)
+
+            let  object = {};
+
+            fmData.forEach((value, key) => {
+    // Reflect.has in favor of: object.hasOwnProperty(key)
+            if(!Reflect.has(object, key)){
+                object[key] = value;
+                return;
+            }
+            if(!Array.isArray(object[key])){
+                object[key] = [object[key]];    
+            }
+            object[key].push(value);
+        })
+            console.log(object)
+
+
+            ajax({
+                method:'post',
+                url:'http://127.0.0.1:8081/api/add',
+                data:object,
+                success:function(res){console.log(res)}
+            })
+
+            ajax({
+                method:'get',
+                url:'http://127.0.0.1:8081/api/index',
+                data:{},
+                success:function(res){
+                    // console.log(res)
+                    // content.data=res
+                    content={data:res}
+                    let htmlStr= template('tel-p',content)
+                    document.querySelector('#div2').innerHTML= htmlStr
+                }
+            })
+
         })
 
 
-        function ajax1(){
-            var xmlhttp
-            if(window.XMLHttpRequest){
-                xmlhttp= new XMLHttpRequest()
-            }
-            else{
-                xmlhttp = new ActiveXObject("Microsoft. XMLHTTP")
-            }
+        document.querySelector('#div2').addEventListener('click',function(e){
+            console.log(e.target)
+            console.log(e.target.id)
+            console.log(e.target.innerHTML)
 
-            xmlhttp.onreadystatechange= function(){
-                if(xmlhttp.readyState==4 && xmlhttp.status==200){
-                    div.innerHTML=xmlhttp.responseText
+            if(e.target.innerHTML='删除'){
+
+                ajax({
+                        method:'post',
+                        url:'http://127.0.0.1:8081/api/del',
+                        data:{id:e.target.id},
+                        success:function(res){
+                            console.log(res)
+                        }
+                     })
+            }
+            ajax({
+                method:'get',
+                url:'http://127.0.0.1:8081/api/index',
+                data:{},
+                success:function(res){
+                    // console.log(res)
+                    // content.data=res
+                    content={data:res}
+                    let htmlStr= template('tel-p',content)
+                    document.querySelector('#div2').innerHTML= htmlStr
                 }
-            }
-            xmlhttp.open('get','http://127.0.0.1:8081/api/user',true)
-            xmlhttp.send()
-        }
+            })
 
+        })
 
-        function ajax2(data){
-            var xmlhttp
-            if(window.XMLHttpRequest){
-                xmlhttp= new XMLHttpRequest()
-            }
-            else{
-                xmlhttp = new ActiveXObject("Microsoft. XMLHTTP")
-            }
-
-            xmlhttp.onreadystatechange= function(){
-                if(xmlhttp.readyState==4 && xmlhttp.status==200){
-                    div.innerHTML=xmlhttp.responseText
-                }
-            }
-            
-            xmlhttp.open('post','http://127.0.0.1:8081/api/add',true)
-            // xmlhttp.setRequestHeader("Content-Type", "application/text/plain;charset=utf-8")
-            xmlhttp.setRequestHeader("Content-Type",  "application/x-www-form-urlencoded")
-          
-            xmlhttp.send(data)
-        }
     </script>
+
+
+<script type="text/html" id="tel-p">
+    <!-- {{data.length}} -->
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>密码</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        {{each data}}
+        <tr>
+            <td>{{$value.id}}</td>
+            <td>{{$value.username}}</td>
+            <td>{{$value.password}}</td>
+            <td>{{$value.status}}</td>
+            <td id="{{$value.id}}">删除</td>
+            <td id="{{$value.id}}">编辑</td>
+        </tr>
+        {{/each}}
+    </table>
+</script>
+
 </body>
 </html>

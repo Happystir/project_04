@@ -1,0 +1,45 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="div1"></div>
+    <!-- <div id="div2"></div> -->
+    <script src="./node_modules/art-template/lib/template-web.js"></script>
+
+    <!-- <script type="text/html" id="tel-p1">
+        {{data.length}}
+    {{each data}}
+    <h1>{{$value.name}}</h1>
+    <h1>{{$value.upd}}</h1>
+    <h1>{{$value.sex}}</h1>
+    {{/each}}
+    </script> -->
+
+    <script type="text/html" id="tel-p2">
+    {{each value}}
+    <h1>{{name}}</h1>
+    <h1>{{upd}}</h1>
+    <h1>{{sex}}</h1>
+    {{/each}}
+    </script>
+
+
+    <script>
+        // let content1= {data:[{name:'张三',upd:123,sex:0},{name:'李四',upd:123,sex:0}]}
+        let content2= [{name:'hulei',upd:123,sex:0},{name:'hulei',upd:123,sex:0}]
+        // // console.log(data[0]
+
+        // let htmlStr1=template('tel-p1',content1)
+        let htmlStr2=template('tel-p2',content2)
+
+        // document.querySelector('#div1').innerHTML=htmlStr1
+        document.querySelector('#div2').innerHTML=htmlStr2
+
+    </script>
+</body>
+</html>

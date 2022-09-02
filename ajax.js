@@ -5,6 +5,15 @@
 //     success:function(res){console.log(res)}
 // }
 
+function resolveData(data){
+    let arr=[]
+    for(let k in data)
+    {
+        arr.push(k+'='+data[k])
+    }
+    return arr.join('&')
+}
+
 function ajax(ajaxData){
     let xhr
     if(window.XMLHttpRequest){
@@ -14,22 +23,13 @@ function ajax(ajaxData){
         xhr= new ActiveXObject("Microsoft.XMLHTTP")
     }
 
-    function resolveData(data){
-        let arr=[]
-        for(let k in data)
-        {
-            arr.push(k+'='+data[k])
-        }
-        return arr.join('&')
-    }
-
     let qs= resolveData(ajaxData.data)
 
     if(ajaxData.method.toUpperCase()==='GET'){
         xhr.open(ajaxData.method,ajaxData.url+'?'+qs)
         xhr.send()
     }
-    else if(ajaxData.method.toUpperCase()==='post'){
+    else if(ajaxData.method.toUpperCase()==='POST'){
         xhr.open(ajaxData.method,ajaxData.url)
         xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
         xhr.send(qs)

@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // let str='username=11&password=22'
+        // let arr=str.split('&')
+        // let object={}
+        // for(let i=0;i<arr.length;i++)
+        // {
+        //     arr[i]=arr[i].split('=')
+        //     object[arr[i][0]]=arr[i][1]
+        // }
+
+        // // console.log(arr)
+        // // console.log(object)
+        // return object
+
+        function resolveData1(data){
+            let arr=[]
+          
+            for(let k in data)
+            {   if(data[k]!='' && typeof(data[k])==="string"){
+                arr.push(k+'='+'"'+data[k]+'"')
+                }
+                else{
+                    continue
+                }
+               
+            }
+            // return arr.join(' and ')
+            console.log(arr.join(' and '))
+        }
+
+        
+        function resolveData2(data){
+
+            let arr=[]
+            for(let k in data)
+            {   if(data[k] !=''){
+                arr.push(data[k])
+                }
+            }
+            console.log(arr)
+            // return arr
+        }
+
+        resolveData1({ username: '', password: ''})
+        resolveData2({ username: '11', password: '123456' })
+        let a=[]
+        console.log(a.length===0)
+
+    </script>
+</body>
+</html>
