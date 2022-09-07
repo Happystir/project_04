@@ -174,9 +174,28 @@ router.post('/del',function(req,res){
             console.log('删除成功')
         }
     })
-
-
 })
+
+router.post('/update',function(req,res){
+
+    console.log(req.body)
+    res.end('1112')
+
+    let str='update users set ? where id=?'
+
+        db.query(str,[req.body,req.body.id],function(err,result){
+        if(err){
+            console.log('err:'+err.message)
+        }
+        else if(result.affectedRows===1){
+            console.log('更新成功')
+            console.log(result)
+        }
+    })
+})
+
+
+
 
 
 app.use(cors())
